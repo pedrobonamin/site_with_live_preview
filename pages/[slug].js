@@ -1,19 +1,15 @@
 import React from "react";
 import { groq } from "next-sanity";
-import Link from "next/link";
 
 import { usePreviewSubscription } from "../lib/sanity";
 import { getClient } from "../lib/sanity.server";
-import SectionBase from "./sectionBase";
+import PageRenderer from "./components/pageRenderer";
 
 /**
  * The `usePreviewSubscription` takes care of updating
  * the preview content on the client-side
  */
-export default function Page({ data, preview, notFound }) {
-  if (notFound) {
-    return <div>404 Page not found</div>;
-  }
+export default function Page({ data, preview }) {
   const { data: previewData } = usePreviewSubscription(data?.query, {
     params: data?.queryParams ?? {},
     // The hook will return this on first render
@@ -32,33 +28,11 @@ export default function Page({ data, preview, notFound }) {
   // It'll be completely blank when they start!
   console.log("previewData", previewData);
   return (
-    <div>
-      <div
-        style={{
-          cursor: "pointer",
-          position: "absolute",
-          right: "32px",
-          bottom: "32px",
-          background: "lightGray",
-          padding: "8px",
-          borderRadius: "4px",
-        }}
-      >
-        {preview ? (
-          <Link href={`/api/exit-preview?slug=${data.queryParams.slug}`}>
-            <div>
-              <div>Preview Mode Activated!</div>
-              Go to live site
-            </div>
-          </Link>
-        ) : (
-          <div>This is a live site</div>
-        )}
-      </div>
-      {page?.sections?.map((section) => (
-        <SectionBase section={section} />
-      ))}
-    </div>
+    <PageRenderer
+      page={page}
+      preview={preview}
+      slug={data?.queryParams?.slug}
+    />
   );
 }
 

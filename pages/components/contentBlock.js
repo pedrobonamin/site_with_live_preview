@@ -17,7 +17,7 @@ const ContentBlock = ({ contentBlock }) => {
   return (
     <>
       {order.map((o) => (
-        <ContentItem contentItem={list[o - 1]} />
+        <ContentItem key={o} contentItem={list[o - 1]} />
       ))}
     </>
   );
